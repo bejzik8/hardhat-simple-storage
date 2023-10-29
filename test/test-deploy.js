@@ -1,5 +1,5 @@
 const { ethers } = require('hardhat')
-const { expect, assert } = require('chai')
+const { assert, expect } = require('chai')
 
 describe('Simple Storage', function () {
     let simpleStorageFactory, simpleStorage
@@ -13,6 +13,17 @@ describe('Simple Storage', function () {
     it('Should start with a favorite number of 0', async function () {
         const currentValue = await simpleStorage.retrieve()
         const expectedValue = 0
+
+        expect(currentValue).to.equal(expectedValue)
+    })
+
+    it('Should update when we call store', async function () {
+        const expectedValue = '9'
+
+        const transactionResponse = await simpleStorage.store(expectedValue)
+        await transactionResponse.wait(1)
+
+        const currentValue = await simpleStorage.retrieve()
 
         assert.equal(currentValue.toString(), expectedValue)
     })
