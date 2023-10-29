@@ -21,9 +21,23 @@ async function main() {
     console.log('Network config:', network.config)
 
     if (network.config.chainId === 11155111 && process.env.ETHERSCAN_API_KEY) {
+        console.log('Waiting for etherscan to index contract...')
         await deploymentTransaction.wait(6)
         await verify(contractAddress, [])
     }
+
+    const currentValue = await simpleStorage.retrieve()
+
+    console.log('Current value:', currentValue.toString())
+
+    console.log('Updating value...')
+
+    const transactionResponse = await simpleStorage.store(9)
+    await transactionResponse.wait(1)
+
+    const updatedValue = await simpleStorage.retrieve()
+
+    console.log('Updated value:', updatedValue.toString())
 }
 
 async function verify(contractAddress, args) {
